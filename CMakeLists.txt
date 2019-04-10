@@ -55,3 +55,6 @@ target_link_libraries(${PROJECT_NAME} assimp CGAL noise ${LIBS})
 
 add_executable(render_object src/main_kinect.cpp)
 target_link_libraries(render_object ${PROJECT_NAME})
+
+add_executable(render_object_surrounded src/main_kinect_surrounded.cpp)
+target_link_libraries(render_object_surrounded ${PROJECT_NAME})

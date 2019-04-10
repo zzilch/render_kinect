@@ -117,6 +117,7 @@ int main(int argc, char **argv)
 
   // Storage of random transform
   Eigen::Affine3d noise;
+
   for(int i=0; i<frames; ++i) {
     
     // sample noisy transformation around initial one
@@ -124,8 +125,20 @@ int main(int argc, char **argv)
     Eigen::Affine3d current_tf = noise*transform;
     
     // give pose and object name to renderer
-    Simulator.simulateMeasurement(current_tf, store_depth, store_label, store_pcd);
-    
+    Simulator.simulateMeasurement(current_tf);
+
+    // store measurement result
+    std::stringstream lD;
+    lD << object_models_dir << "depth_orig" << std::setw(3) << std::setfill('0') << i << ".png";
+    Simulator.store_depth(lD.str());
+
+    lD.str("");
+    lD << object_models_dir << "labels" << std::setw(3) << std::setfill('0') << i << ".png";
+    Simulator.store_label(lD.str());
+
+    lD.str("");
+    lD << object_models_dir << "point_cloud" << std::setw(3) << std::setfill('0') << i << ".pcd";
+    Simulator.store_pcd(lD.str());    
   }
 
   return 0;

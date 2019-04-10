@@ -1,0 +1,5 @@
+/build
+/lib
+/bin
+/obj_models/*.png
+/obj_models/*.pcd

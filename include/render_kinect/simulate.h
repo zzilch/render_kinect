@@ -158,6 +158,24 @@ public:
     fout.close();
   }
 
+  const pcl::PointCloud<pcl::PointXYZ> point_cloud()
+  {
+    pcl::PointCloud<pcl::PointXYZ> cloud;
+    // Fill in the cloud data
+    cloud.width = point_cloud_.rows;
+    cloud.height = 1;
+    cloud.is_dense = false;
+    cloud.points.resize(cloud.width * cloud.height);
+    for (int i = 0; i < point_cloud_.rows; i++)
+    {
+      const float *point = point_cloud_.ptr<float>(i);
+      cloud.points[i].x = point[0];
+      cloud.points[i].y = point[1];
+      cloud.points[i].z = point[2];
+    }
+    return cloud;
+  }
+
   KinectSimulator *object_model_;
   cv::Mat depth_im_, scaled_im_, point_cloud_, labels_;
   Eigen::Affine3d transform_;

@@ -43,8 +43,8 @@
 #include <render_kinect/objectMeshModel.h>
 #include <render_kinect/camera.h>
 #include <render_kinect/noise.h>
-
-#include <opencv/highgui.h>
+// #include <opencv/highgui.h>
+#include <opencv2/highgui/highgui.hpp>
 
 inline double abs(Point p)
 {

@@ -4,3 +4,4 @@
 /bin
 /obj_models/*.png
 /obj_models/*.pcd
+/obj_models/*.ply

@@ -4,6 +4,7 @@ if(COMMAND cmake_policy)
 endif(COMMAND cmake_policy)
 
 set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_CXX_STANDARD 11)
 
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -58,3 +59,6 @@ target_link_libraries(render_object ${PROJECT_NAME})
 
 add_executable(render_object_surrounded src/main_kinect_surrounded.cpp)
 target_link_libraries(render_object_surrounded ${PROJECT_NAME})
+
+add_executable(render_object_merge src/main_kinect_merge.cpp)
+target_link_libraries(render_object_merge ${PROJECT_NAME})

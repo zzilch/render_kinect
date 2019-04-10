@@ -41,29 +41,25 @@
 
 #include <render_kinect/simulate.h>
 #include <render_kinect/camera.h>
+#include <pcl/common/transforms.h>
+#include <pcl/io/ply_io.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <cmath>
 
-void getSurroundedTransforms(
+void getOrbitTransforms(
     std::vector<Eigen::Affine3d,Eigen::aligned_allocator<Eigen::Affine3d>> & p_tfs, 
     const int & view_num = 10, 
-    const double & distance = 1.0, 
-    const unsigned int & seed = 0)
+    const double & distance = 1.0)
 {
-    srand(seed);
     p_tfs.resize(view_num);
     for (int i = 0; i < view_num; i++)
     {
-        double yaw = ((double)(rand() % 1000)) / 1000.0 * 2 * M_PI;
-        double pitch = ((double)(rand() % 1000 - 500)) / 1000.0 * M_PI;
-        double roll = ((double)(rand() % 1000 - 500)) / 1000.0 * M_PI;
+        double pitch = (double)(i) / view_num * 2 * M_PI;
         p_tfs[i] = Eigen::Affine3d::Identity();
         p_tfs[i].translate(Eigen::Vector3d::UnitZ() * distance);
-        p_tfs[i].rotate(Eigen::AngleAxis<double>(yaw, Eigen::Vector3d::UnitY()));
         p_tfs[i].rotate(Eigen::AngleAxis<double>(pitch, Eigen::Vector3d::UnitX()));
-        p_tfs[i].rotate(Eigen::AngleAxis<double>(roll, Eigen::Vector3d::UnitZ()));
     }
 }
 
@@ -113,7 +109,9 @@ int main(int argc, char **argv)
 
     // sample a group of random transformations on a ball
     std::vector<Eigen::Affine3d,Eigen::aligned_allocator<Eigen::Affine3d>> p_tfs;
-    getSurroundedTransforms(p_tfs, frames);
+    getOrbitTransforms(p_tfs, frames, 1.0);
+
+    pcl::PointCloud<pcl::PointXYZ> cloud;
     for (int i = 0; i < frames; ++i)
     {
         // give pose and object name to renderer
@@ -125,14 +123,16 @@ int main(int argc, char **argv)
         lD << object_models_dir << "depth_orig" << std::setw(3) << std::setfill('0') << i << ".png";
         Simulator.store_depth(lD.str());
 
-        lD.str("");
-        lD << object_models_dir << "labels" << std::setw(3) << std::setfill('0') << i << ".png";
-        Simulator.store_label(lD.str());
+        pcl::PointCloud<pcl::PointXYZ> cloud_world;
+        pcl::transformPointCloud(Simulator.point_cloud(),cloud_world,current_tf.inverse());
 
-        lD.str("");
-        lD << object_models_dir << "point_cloud" << std::setw(3) << std::setfill('0') << i << ".pcd";
-        Simulator.store_pcd(lD.str());
+        cloud += cloud_world;
     }
+
+    std::stringstream lD;
+    lD << object_models_dir << "point_cloud" << ".ply";
+    if (pcl::io::savePLYFileBinary(lD.str(), cloud) != 0)
+      std::cout << "Couldn't store point cloud at " << lD.str() << std::endl;
 
     return 0;
 }

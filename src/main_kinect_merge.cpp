@@ -42,7 +42,7 @@
 #include <render_kinect/simulate.h>
 #include <render_kinect/camera.h>
 #include <pcl/common/transforms.h>
-#include <pcl/io/ply_io.h>
+#include <pcl/io/pcd_io.h>
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -130,8 +130,8 @@ int main(int argc, char **argv)
     }
 
     std::stringstream lD;
-    lD << object_models_dir << "point_cloud" << ".ply";
-    if (pcl::io::savePLYFileBinary(lD.str(), cloud) != 0)
+    lD << object_models_dir << "point_cloud" << ".pcd";
+    if (pcl::io::savePCDFileBinary(lD.str(), cloud) != 0)
       std::cout << "Couldn't store point cloud at " << lD.str() << std::endl;
 
     return 0;

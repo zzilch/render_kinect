@@ -44,14 +44,35 @@ make -j
 
 Testing
 ------------
-There is a small test program that will render the simulated kinect measurements of a wheel at a number of slightly perturbed transformations relative to the camera.
+There is three small test programs that will render the simulated kinect measurements of a wheel at a number of slightly perturbed transformations relative to the camera.
 
+**render_object**
 ```
 cd bin
 ./render_object wheel.obj
 ```
-
-This should store a number of depth and labeled images in /tmp. If you have PCL installed, it also stores point clouds as pcl files.
-
+This should store a number of depth and labeled images in ../obj_models If you have PCL installed, it also stores point clouds as pcl files.
+![](data/render_object.png?raw=true)  
 Point clouds generated from a simulated kinect measurement taken from a wheel in 10 slightly different poses. This measurement does not expose additional noise.
 ![](data/Wheels.png?raw=true)
+  
+**render_object_surrounded**
+```
+cd bin
+./render_object_surrounded wheel.obj
+```
+This should perform virtual scanning from 10 different poses surrounded the wheel.    
+![](data/render_object_surrounded.png?raw=true)
+  
+**render_object_merge**
+```
+cd bin
+./render_object_merge wheel.obj
+```
+This should perform virtual scanning from 10 different poses by rotating around the X axis.  
+![](data/render_object_merge.png?raw=true)
+```
+pcl_viewer ../obj_models/point_cloud.pcd
+```
+If you have PCL tools installed, you can visualized the point cloud merged from 10 views by pcl_viewer.  
+![](data/point_cloud.png?raw=true)
